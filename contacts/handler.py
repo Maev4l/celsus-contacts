@@ -4,7 +4,7 @@ import os
 from contextlib import closing
 import uuid
 import psycopg2
-from psycopg2.extras import execute_values, NamedTupleCursor
+from psycopg2.extras import NamedTupleCursor
 from contacts.utils import makeResponse
 from contacts.utils import get_attribute
 
@@ -59,4 +59,33 @@ def post_contact(event, context):
 
     except psycopg2.Error as e:
         logger.error(f"post contact error: {e}")
+        return makeResponse(500, {'message': str(e)})
+
+
+def get_contacts(event, context):
+    try:
+        with closing(getConnection()) as connection:
+            with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
+                user_id = event['requestContext']['authorizer']['claims']['sub']
+                schema = os.environ['PGSCHEMA']
+
+                cursor.execute(
+                    f'SELECT "id", "nickname", "thumbnail" FROM "{schema}"."contact"'
+                    'WHERE "user_id"=%s ORDER BY "nickname"',
+                    [user_id])
+
+                result = {
+                    'contacts': []
+                }
+                for record in cursor:
+                    result['contacts'].append({
+                        'id': record.id,
+                        'nickname': record.nickname,
+                        'thumbnail': record.thumbnail
+                    })
+
+                return makeResponse(200, result)
+
+    except psycopg2.Error as e:
+        logger.error(f"get contacts error: {e}")
         return makeResponse(500, {'message': str(e)})
