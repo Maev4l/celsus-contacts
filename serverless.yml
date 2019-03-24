@@ -64,8 +64,8 @@ package:
 
 functions:
   postContact:
-    handler: synchronizer/handler.create_contact
-    name: post_contact
+    handler: synchronizer/handler.post_contact
+    name: post-contact
     events:
       - http:
           path: v1/contacts

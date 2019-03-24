@@ -1,7 +1,7 @@
 import json
 
 
-def makeResponse(statusCode, body):
+def makeResponse(statusCode, body=None):
     return {
         'statusCode': statusCode,
         'headers': {

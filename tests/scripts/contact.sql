@@ -10,3 +10,5 @@ WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
+
+INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")	VALUES ('1000', 'user1', 'contact-1', 'thumbnail-1');

@@ -35,6 +35,39 @@ class TestPostContacts(object):
             with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
                 cursor.execute(
                     f'SELECT * FROM "{schema}"."contact" WHERE id=%s', (id,))
+                assert cursor.rowcount == 1
+                for record in cursor:
+                    assert record.id == id
+                    assert record.nickname == nickname
+                    assert record.thumbnail == thumbnail
+                    assert record.user_id == userId
+
+    def test_update_contact(self):
+        nickname = 'contact-name-1-bis'
+        thumbnail = 'xxx-bis'
+        id = '1000'
+        payload = {
+            'id': id,
+            'nickname': nickname,
+            'thumbnail': thumbnail
+        }
+
+        userId = 'user1'
+        mock_event = make_mock_event(userId, payload)
+        response = handler.post_contact(mock_event, None)
+        status_code = response['statusCode']
+        assert status_code == 204
+
+        body = json.loads(response['body'])
+        assert body is None
+
+        schema = os.environ['PGSCHEMA']
+        connection = getConnection()
+        with closing(connection):
+            with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
+                cursor.execute(
+                    f'SELECT * FROM "{schema}"."contact" WHERE id=%s', (id,))
+                assert cursor.rowcount == 1
                 for record in cursor:
                     assert record.id == id
                     assert record.nickname == nickname
