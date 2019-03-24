@@ -89,3 +89,26 @@ def get_contacts(event, context):
     except psycopg2.Error as e:
         logger.error(f"get contacts error: {e}")
         return makeResponse(500, {'message': str(e)})
+
+
+def delete_contact(event, context):
+    try:
+        with closing(getConnection()) as connection:
+            with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
+                user_id = event['requestContext']['authorizer']['claims']['sub']
+                contact_id = event['pathParameters']['id']
+                schema = os.environ['PGSCHEMA']
+
+                cursor.execute(
+                    f'DELETE FROM "{schema}"."contact"'
+                    'WHERE "user_id"=%s AND "id"=%s',
+                    [user_id, contact_id])
+                connection.commit()
+                if cursor.rowcount >= 1:
+                    return makeResponse(204)
+                else:
+                    return makeResponse(404)
+
+    except psycopg2.Error as e:
+        logger.error(f"delete contact error: {e}")
+        return makeResponse(500, {'message': str(e)})

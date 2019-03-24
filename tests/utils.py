@@ -3,7 +3,7 @@ import os
 import psycopg2
 
 
-def make_mock_event(subject, body):
+def make_mock_event(subject, body=None, path_parameters=None):
     mock_event = {
         'requestContext': {
             'authorizer': {
@@ -12,7 +12,8 @@ def make_mock_event(subject, body):
                 }
             }
         },
-        'body': json.dumps(body)
+        'body': json.dumps(body),
+        'pathParameters': path_parameters
     }
 
     return mock_event
