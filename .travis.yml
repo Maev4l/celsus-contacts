@@ -1,0 +1,25 @@
+language: python
+python:
+  - "3.7-dev"
+notifications:
+  email: false # Disable all mail notifications
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
+env:
+  global:
+    - PGUSER=postgres
+    - PGPASSWORD=
+    - PGHOST=localhost
+    - PGPORT=5432
+    - PGDATABASE=postgres
+    - PGSCHEMA=celsus_contacts
+install:
+  - pip install -r requirements.txt
+before_script:
+  - pip install coveralls pytest-cov
+script:
+  - py.test --cov contacts/ tests/
+after_script:
+  - coveralls

@@ -1,0 +1,18 @@
+{
+  "name": "celsus-contacts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "deploy": "npx sls deploy",
+    "reqs": "pipreqs . --ignore node_modules --force",
+    "test": "pytest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^1.35.1",
+    "serverless-domain-manager": "^2.6.11",
+    "serverless-python-requirements": "^4.2.5"
+  }
+}
