@@ -11,7 +11,7 @@ from utils import make_mock_event, getConnection
 
 @pytest.mark.usefixtures('provision_database')
 class TestDeleteContacts(object):
-    def test_delete_contacts(self):
+    def test_delete_contact(self):
 
         userId = 'user3'
         id = '1003'
@@ -31,10 +31,18 @@ class TestDeleteContacts(object):
                     f'SELECT * FROM "{schema}"."contact" WHERE id=%s', (id,))
                 assert cursor.rowcount == 0
 
-    def test_delete_contacts_with_incorrect_id(self):
+    def test_delete_contact_with_incorrect_id(self):
 
         userId = 'user3'
         id = '9999'
+        mock_event = make_mock_event(userId, None, {'id': id})
+        response = handler.delete_contact(mock_event, None)
+        status_code = response['statusCode']
+        assert status_code == 404
+
+    def test_delete_contact_with_borrowed_book(self):
+        userId = 'user4'
+        id = '1004'
         mock_event = make_mock_event(userId, None, {'id': id})
         response = handler.delete_contact(mock_event, None)
         status_code = response['statusCode']

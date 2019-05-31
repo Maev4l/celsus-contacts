@@ -101,8 +101,10 @@ def delete_contact(event, context):
 
                 cursor.execute(
                     f'DELETE FROM "{schema}"."contact"'
-                    'WHERE "user_id"=%s AND "id"=%s',
-                    [user_id, contact_id])
+                    'WHERE "user_id"=%s AND "id"=%s AND '
+                    f'NOT EXISTS (SELECT 1 FROM "{schema}"."borrowing" WHERE'
+                    '"user_id"=%s AND "contact_id"=%s)',
+                    [user_id, contact_id, user_id, contact_id])
                 connection.commit()
                 if cursor.rowcount >= 1:
                     return makeResponse(204)
