@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 
 
 def makeResponse(statusCode, body=None):
@@ -14,3 +15,7 @@ def makeResponse(statusCode, body=None):
 
 def get_attribute(data, attribute, default_value):
     return data.get(attribute) or default_value
+
+
+class IncomingOperations(Enum):
+    VALIDATE_BOOK_BORROWER = 'VALIDATE_BOOK_BORROWER'

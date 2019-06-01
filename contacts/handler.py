@@ -1,13 +1,11 @@
+from contacts.storage import get_storage
+from contacts.utils import get_attribute
+from contacts.utils import makeResponse
+import uuid
 import json
 import logging
 
-
-import uuid
-
-
-from contacts.utils import makeResponse
-from contacts.utils import get_attribute
-from contacts.storage import get_storage
+from contacts.dispatcher import Dispatcher
 
 logger = logging.getLogger()
 
@@ -51,3 +49,18 @@ def delete_contact(event, context):
         return makeResponse(status)
     except Exception as e:
         return makeResponse(500, {'message': str(e)})
+
+
+def handle_messages(event, context):
+
+    record = event['Records'][0]
+    reply_address = None
+    if 'replyAddress' in record['messageAttributes']:
+        reply_address = record['messageAttributes']['replyAddress']['stringValue']
+
+    payload = json.loads(record['body'])
+
+    operation = payload['operation']
+
+    dispatcher = Dispatcher()
+    dispatcher.dispatch(operation, payload, reply_address)

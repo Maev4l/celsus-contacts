@@ -95,3 +95,11 @@ functions:
           cors: true
           authorizer:
             arn: ${self:custom.config.userPoolArn}
+
+  handleMessages:
+    handler: contacts/handler.handle_messages
+    name: handle-contacts-messages
+    events:
+      - sqs:
+          arn: ${self:custom.config.contactsQueueArn}
+          batchSize: 1
