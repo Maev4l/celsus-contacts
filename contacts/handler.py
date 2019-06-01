@@ -8,6 +8,8 @@ from psycopg2.extras import NamedTupleCursor
 from contacts.utils import makeResponse
 from contacts.utils import get_attribute
 
+from contacts.dispatcher import Dispatcher
+
 logger = logging.getLogger()
 
 
@@ -114,3 +116,17 @@ def delete_contact(event, context):
     except psycopg2.Error as e:
         logger.error(f"delete contact error: {e}")
         return makeResponse(500, {'message': str(e)})
+
+
+def handle_messages(event, context):
+
+    record = event['Records'][0]
+    reply_address = None
+    if record['messageAttributes']['replyAddress'] is not None:
+        reply_address = record['messageAttributes']['replyAddress']['stringValue']
+
+    payload = json.loads(record['body'])
+
+    operation = payload['operation']
+
+    dispatcher = Dispatcher()

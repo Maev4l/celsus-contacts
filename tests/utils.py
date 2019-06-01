@@ -19,6 +19,25 @@ def make_mock_event(subject, body=None, path_parameters=None):
     return mock_event
 
 
+def make_mock_message(message, reply_address=None):
+    record = {
+        'messageId': '0',
+        'body': json.dumps(message),
+        'messageAttributes': {}
+    }
+
+    if reply_address is not None:
+        record['messageAttributes'] = {
+            'replyAddress': {
+                'stringValue': reply_address
+            }
+        }
+
+    return {
+        'Records': [record]
+    }
+
+
 def getConnection():
     hostname = os.environ['PGHOST']
     port = os.environ['PGPORT']
