@@ -4,7 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "deploy:dev": "npm run download-infra:dev && npx sls deploy",
+    "deploy:dev": "yarn run download-infra:dev && npx sls deploy",
     "download-infra:dev": "aws s3 cp s3://celsus-tf-state/celsus/dev/infra.json infra.json",
     "reqs": "pipreqs . --ignore node_modules --force",
     "test": "pytest"
@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless": "^1.40.0",
-    "serverless-domain-manager": "^3.2.1",
-    "serverless-python-requirements": "^4.3.0"
+    "serverless": "1.78.1",
+    "serverless-domain-manager": "4.2.0",
+    "serverless-python-requirements": "5.1.0"
   }
 }

@@ -16,8 +16,16 @@ class Dispatcher(metaclass=Singleton):
 
     def __init__(self):
         self._handlers = {
-            IncomingOperations.VALIDATE_BOOK_BORROWER.value: validate_borrower
+            IncomingOperations.VALIDATE_BOOK_BORROWER.value: self.dispatch_validate_book_borrower
         }
+
+    def dispatch_validate_book_borrower(self, payload, reply_address):
+        user_id = payload['userId']
+        contact_id = payload['contactId']
+        lending_id = payload['lendingId']
+        book_id = payload['bookId']
+        validate_borrower(user_id, contact_id,
+                          lending_id, book_id, reply_address)
 
     def dispatch(self, operation, payload, reply_address):
         handler = self._handlers.get(operation)

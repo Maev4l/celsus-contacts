@@ -19,3 +19,12 @@ def get_attribute(data, attribute, default_value):
 
 class IncomingOperations(Enum):
     VALIDATE_BOOK_BORROWER = 'VALIDATE_BOOK_BORROWER'
+
+
+class OutgoingOperations(Enum):
+    VALIDATE_BOOK_BORROWER = 'VALIDATE_BOOK_BORROWER'
+
+
+class BorrowingStatus(Enum):
+    BORROWER_VALIDATED = 'BORROWER_VALIDATED'
+    BORROWER_NOT_VALIDATED = 'BORROWER_NOT_VALIDATED'

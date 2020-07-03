@@ -20,7 +20,7 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.7
+  runtime: python3.8
   versionFunctions: false
   memorySize: 1024
   region: ${self:custom.config.region}
