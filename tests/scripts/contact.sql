@@ -23,3 +23,6 @@ INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1003', 
 
 -- for test delete if book borrowed
 INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1004', 'user4', 'contact-z-1', 'thumbnail-1');
+
+-- for borrower validation 
+INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1005', 'user5', 'contact-1005', '');

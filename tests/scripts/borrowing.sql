@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "borrowing"
 (
     lending_id VARCHAR(36) NOT NULL,
+    status VARCHAR(100) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     contact_id VARCHAR(36) NOT NULL,
     book_id VARCHAR(36) NOT NULL

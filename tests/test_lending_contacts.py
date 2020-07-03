@@ -13,7 +13,10 @@ class TestLendings(object):
     def test_handle_successful_borrower_validation(self):
 
         mock_message = make_mock_message({
-            'operation': IncomingOperations.VALIDATE_BOOK_BORROWER.value
+            'operation': IncomingOperations.VALIDATE_BOOK_BORROWER.value,
+            'userId': 'user5',
+            'contactId': '1005',
+            'lendingId': '1'
         })
         handler.handle_messages(event=mock_message, context=None)
         assert 1 == 1

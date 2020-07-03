@@ -147,6 +147,18 @@ class DatabaseStorage(Storage):
             logger.error(f"get contacts error: {e}")
             raise e
 
+    def get_contact(self, user_id, contact_id):
+        try:
+            with closing(self.connection) as connection:
+                with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
+                    schema = os.environ['PGSCHEMA']
+                    cursor.execute(f'SELECT "id" from "{schema}"."contact"'
+                                   'WHERE "id"= %s AND "user_id"= %s', (contact_id, user_id))
+                    record = cursor.fetchone()
+        except psycopg2.Error as e:
+            logger.error(f"get contacts error: {e}")
+            raise e
+
 
 def get_storage():
     return DatabaseStorage()
