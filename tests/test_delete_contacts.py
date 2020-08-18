@@ -46,4 +46,4 @@ class TestDeleteContacts(object):
         mock_event = make_mock_event(userId, None, {'id': id})
         response = handler.delete_contact(mock_event, None)
         status_code = response['statusCode']
-        assert status_code == 404
+        assert status_code == 400

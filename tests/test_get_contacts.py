@@ -31,3 +31,30 @@ class TestGetContacts(object):
         assert contact['id'] == '1001'
         assert contact['nickname'] == 'contact-z-1'
         assert contact['thumbnail'] == 'thumbnail-1'
+
+    def test_get_existing_contact(self):
+        userId = 'user2'
+        mock_event = make_mock_event(userId, None, {'id': '1001'})
+        response = handler.get_contact(mock_event, None)
+
+        status_code = response['statusCode']
+        assert status_code == 200
+
+        body = json.loads(response['body'])
+        contact = body
+        assert contact is not None
+        assert contact['id'] == '1001'
+        assert contact['nickname'] == 'contact-z-1'
+        assert contact['thumbnail'] == 'thumbnail-1'
+
+    def test_get_unknown_contact(self):
+        userId = 'user2'
+        mock_event = make_mock_event(userId, None, {'id': '9999'})
+        response = handler.get_contact(mock_event, None)
+
+        status_code = response['statusCode']
+        assert status_code == 404
+
+        body = json.loads(response['body'])
+        contact = body
+        assert contact is None

@@ -38,15 +38,34 @@ def get_contacts(event, context):
         return makeResponse(500, {'message': str(e)})
 
 
+def get_contact(event, context):
+    try:
+        user_id = event['requestContext']['authorizer']['claims']['sub']
+        contact_id = event['pathParameters']['id']
+        with get_storage() as storage:
+            result = storage.get_contact(user_id, contact_id)
+            status_code = 404 if result is None else 200
+
+            return makeResponse(status_code, result)
+
+    except Exception as e:
+        logger.error(str(e))
+        return makeResponse(500, {'message': str(e)})
+
+
 def delete_contact(event, context):
     try:
         user_id = event['requestContext']['authorizer']['claims']['sub']
         contact_id = event['pathParameters']['id']
         with get_storage() as storage:
-            success = storage.remove_contact(user_id, contact_id)
+            contact = storage.get_contact(user_id, contact_id)
+            if contact is None:
+                return makeResponse(404)
+            else:
+                success = storage.remove_contact(user_id, contact_id)
 
-            status = 204 if success is True else 404
-            return makeResponse(status)
+                status = 204 if success is True else 400
+                return makeResponse(status)
     except Exception as e:
         return makeResponse(500, {'message': str(e)})
 
