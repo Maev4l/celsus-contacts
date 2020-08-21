@@ -82,3 +82,21 @@ class TestLendings(object):
                 cursor.execute(
                     f'SELECT * FROM "{schema}"."borrowing" WHERE user_id=%s AND lending_id=%s AND contact_id=%s AND book_id=%s', ('no-user', '1', '1005', '2000'))
                 assert cursor.rowcount == 0
+
+    def test_handle_returned_book(self):
+        # user does not exists
+        mock_message = make_mock_message({
+            'operation': IncomingOperations.RETURN_LENT_BOOK.value,
+            'userId': 'user6',
+            'contactId': '1006',
+            'lendingId': '2',
+            'bookId': 'book-id-2'
+        })
+        handler.handle_messages(event=mock_message, context=None)
+        schema = os.environ['PGSCHEMA']
+        connection = getConnection()
+        with closing(connection):
+            with closing(connection.cursor(cursor_factory=NamedTupleCursor)) as cursor:
+                cursor.execute(
+                    f'SELECT * FROM "{schema}"."borrowing" WHERE user_id=%s AND lending_id=%s AND contact_id=%s AND book_id=%s', ('user6', '2', '1006', 'book-id-2'))
+                assert cursor.rowcount == 0

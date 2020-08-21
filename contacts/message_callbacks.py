@@ -8,6 +8,12 @@ import logging
 logger = logging.getLogger()
 
 
+def return_book(user_id, contact_id, lending_id, book_id):
+    with get_storage() as storage:
+        storage.remove_borrowing(user_id, contact_id, book_id, lending_id)
+        logger.info(f'Book {book_id} returned by {contact_id}')
+
+
 def validate_borrower(user_id, contact_id, lending_id, book_id, reply_address):
     # Ensure contact exists and belongs to the current user
     with get_storage() as storage:

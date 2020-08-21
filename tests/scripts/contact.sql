@@ -26,3 +26,6 @@ INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1004', 
 
 -- for borrower validation 
 INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1005', 'user5', 'contact-1005', '');
+
+-- for return book use case
+INSERT INTO "contact" ("id", "user_id", "nickname", "thumbnail")VALUES ('1006', 'user6', 'contact-1006', '');

@@ -19,6 +19,7 @@ def get_attribute(data, attribute, default_value):
 
 class IncomingOperations(Enum):
     VALIDATE_BOOK_BORROWER = 'VALIDATE_BOOK_BORROWER'
+    RETURN_LENT_BOOK = 'RETURN_LENT_BOOK'
 
 
 class OutgoingOperations(Enum):
