@@ -3,19 +3,11 @@ import os
 import psycopg2
 
 
-def make_mock_event(subject, body=None, path_parameters=None):
+def make_mock_event(subject, body=None):
     mock_event = {
-        'requestContext': {
-            'authorizer': {
-                'claims': {
-                    'sub': subject
-                }
-            }
-        },
-        'body': json.dumps(body),
-        'pathParameters': path_parameters
+        'userId': subject,
+        'payload': body
     }
-
     return mock_event
 
 

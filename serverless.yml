@@ -2,21 +2,12 @@ service: celsus-contacts
 
 plugins:
   - serverless-python-requirements # For python dependencies packaging
-  - serverless-domain-manager
 
 custom:
   config: ${file(./infra.json)}
   pythonRequirements: # For python dependencies packaging
     dockerizePip: true
     slim: true
-  customDomain:
-    domainName: "api-celsus.isnan.eu"
-    certificateName: ${self:custom.config.certificate}
-    hostedZoneId: ${self:custom.config.hostedZone}
-    basePath: "contacts"
-    stage: ${self:provider.stage}
-    createRoute53Record: true
-    endpointType: edge
 
 provider:
   name: aws
@@ -25,13 +16,8 @@ provider:
   memorySize: 1024
   region: ${self:custom.config.region}
   stage: ${self:custom.config.environment}
-  endpointType: EDGE
   profile: serverless-admin-profile
   timeout: 30
-  # >>> Enable Gzip compression on AWS APi Gateway
-  apiGateway:
-    minimumCompressionSize: 1024 # in bytes
-  # <<< Enable Gzip compression on AWS APi Gateway
   # >>> Lambda has to live in VPC in order to access RDS
   role: ${self:custom.config.lambdaExecutionRoleArn}
   vpc:
@@ -67,35 +53,15 @@ functions:
   postContact:
     handler: contacts/handler.post_contact
     name: post-contact
-    events:
-      - http:
-          path: v1/contacts
-          method: post
-          cors: true
-          authorizer:
-            arn: ${self:custom.config.userPoolArn}
-
   getContacts:
     handler: contacts/handler.get_contacts
     name: get-contacts
-    events:
-      - http:
-          path: v1/contacts
-          method: get
-          cors: true
-          authorizer:
-            arn: ${self:custom.config.userPoolArn}
+  getContact:
+    handler: contacts/handler.get_contact
+    name: get-contact
   deleteContact:
     handler: contacts/handler.delete_contact
     name: delete-contact
-    events:
-      - http:
-          path: v1/contacts/{id}
-          method: delete
-          cors: true
-          authorizer:
-            arn: ${self:custom.config.userPoolArn}
-
   handleMessages:
     handler: contacts/handler.handle_messages
     name: handle-contacts-messages

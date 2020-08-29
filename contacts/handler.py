@@ -11,63 +11,48 @@ logger = logging.getLogger()
 
 
 def post_contact(event, context):
-    try:
-        user_id = event['requestContext']['authorizer']['claims']['sub']
-        payload = json.loads(event['body'])
-        id = get_attribute(payload, 'id', None)
-        with get_storage() as storage:
-            if id is None:
-                id = str(uuid.uuid4())
-                storage.save_contact(user_id, id, payload)
-                return makeResponse(201, {'id': id})
-            else:
-                storage.modify_contact(user_id, payload)
-                return makeResponse(204)
-
-    except Exception as e:
-        return makeResponse(500, {'message': str(e)})
+    user_id = event['userId']
+    payload = event['payload']
+    contact = payload['contact']
+    id = get_attribute(contact, 'id', None)
+    with get_storage() as storage:
+        if id is None:
+            id = str(uuid.uuid4())
+            storage.save_contact(user_id, id, contact)
+            return {'id': id}
+        else:
+            storage.modify_contact(user_id, contact)
+            return True
 
 
 def get_contacts(event, context):
-    try:
-        user_id = event['requestContext']['authorizer']['claims']['sub']
-        with get_storage() as storage:
-            result = storage.list_contacts(user_id)
-            return makeResponse(200, result)
-    except Exception as e:
-        return makeResponse(500, {'message': str(e)})
+    user_id = event['userId']
+    with get_storage() as storage:
+        result = storage.list_contacts(user_id)
+        return result
 
 
 def get_contact(event, context):
-    try:
-        user_id = event['requestContext']['authorizer']['claims']['sub']
-        contact_id = event['pathParameters']['id']
-        with get_storage() as storage:
-            result = storage.get_contact(user_id, contact_id)
-            status_code = 404 if result is None else 200
-
-            return makeResponse(status_code, result)
-
-    except Exception as e:
-        logger.error(str(e))
-        return makeResponse(500, {'message': str(e)})
+    user_id = event['userId']
+    payload = event['payload']
+    contact_id = payload['id']
+    with get_storage() as storage:
+        contact = storage.get_contact(user_id, contact_id)
+        return contact
 
 
 def delete_contact(event, context):
-    try:
-        user_id = event['requestContext']['authorizer']['claims']['sub']
-        contact_id = event['pathParameters']['id']
-        with get_storage() as storage:
-            contact = storage.get_contact(user_id, contact_id)
-            if contact is None:
-                return makeResponse(404)
-            else:
-                success = storage.remove_contact(user_id, contact_id)
+    user_id = event['userId']
+    payload = event['payload']
+    contact_id = payload['id']
 
-                status = 204 if success is True else 400
-                return makeResponse(status)
-    except Exception as e:
-        return makeResponse(500, {'message': str(e)})
+    with get_storage() as storage:
+        contact = storage.get_contact(user_id, contact_id)
+        if contact is None:
+            return False
+        else:
+            success = storage.remove_contact(user_id, contact_id)
+            return success
 
 
 def handle_messages(event, context):

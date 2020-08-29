@@ -15,13 +15,10 @@ class TestDeleteContacts(object):
 
         userId = 'user3'
         id = '1003'
-        mock_event = make_mock_event(userId, None, {'id': id})
-        response = handler.delete_contact(mock_event, None)
-        status_code = response['statusCode']
-        assert status_code == 204
+        mock_event = make_mock_event(userId, {'id': id})
+        result = handler.delete_contact(mock_event, None)
 
-        body = json.loads(response['body'])
-        assert body is None
+        assert result is True
 
         schema = os.environ['PGSCHEMA']
         connection = getConnection()
@@ -32,18 +29,15 @@ class TestDeleteContacts(object):
                 assert cursor.rowcount == 0
 
     def test_delete_contact_with_incorrect_id(self):
-
         userId = 'user3'
         id = '9999'
-        mock_event = make_mock_event(userId, None, {'id': id})
-        response = handler.delete_contact(mock_event, None)
-        status_code = response['statusCode']
-        assert status_code == 404
+        mock_event = make_mock_event(userId, {'id': id})
+        result = handler.delete_contact(mock_event, None)
+        assert result is False
 
     def test_delete_contact_with_borrowed_book(self):
         userId = 'user4'
         id = '1004'
-        mock_event = make_mock_event(userId, None, {'id': id})
-        response = handler.delete_contact(mock_event, None)
-        status_code = response['statusCode']
-        assert status_code == 400
+        mock_event = make_mock_event(userId, {'id': id})
+        result = handler.delete_contact(mock_event, None)
+        assert result is False

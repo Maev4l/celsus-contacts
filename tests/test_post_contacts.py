@@ -15,18 +15,17 @@ class TestPostContacts(object):
         nickname = 'contact-name-1'
         thumbnail = 'xxx'
         payload = {
-            'nickname': nickname,
-            'thumbnail': thumbnail
+            'contact': {
+                'nickname': nickname,
+                'thumbnail': thumbnail
+            }
         }
 
         userId = 'user1'
         mock_event = make_mock_event(userId, payload)
-        response = handler.post_contact(mock_event, None)
-        status_code = response['statusCode']
-        assert status_code == 201
+        contact = handler.post_contact(mock_event, None)
 
-        body = json.loads(response['body'])
-        id = body['id']
+        id = contact['id']
         assert id is not None
 
         schema = os.environ['PGSCHEMA']
@@ -47,19 +46,18 @@ class TestPostContacts(object):
         thumbnail = 'xxx-bis'
         id = '1000'
         payload = {
-            'id': id,
-            'nickname': nickname,
-            'thumbnail': thumbnail
+            'contact': {
+                'id': id,
+                'nickname': nickname,
+                'thumbnail': thumbnail
+            }
         }
 
         userId = 'user1'
         mock_event = make_mock_event(userId, payload)
-        response = handler.post_contact(mock_event, None)
-        status_code = response['statusCode']
-        assert status_code == 204
+        result = handler.post_contact(mock_event, None)
 
-        body = json.loads(response['body'])
-        assert body is None
+        assert result is True
 
         schema = os.environ['PGSCHEMA']
         connection = getConnection()
