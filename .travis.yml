@@ -16,7 +16,7 @@ env:
     - PGDATABASE=postgres
     - PGSCHEMA=celsus_contacts
 install:
-  - pip install pytest-env==0.6.2
+  - pip install pytest-env==0.6.2 mock==4.0.3
   - pip install -r requirements.txt
 before_script:
   - pip install coveralls pytest-cov
