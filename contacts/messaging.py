@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 import boto3
+from botocore.config import Config
 from botocore.exceptions import ClientError
 import json
 import logging
+import os
 
 
 logger = logging.getLogger()
@@ -16,7 +18,8 @@ class Messaging(ABC):
 
 class Sqs(Messaging):
     def __init__(self):
-        self._client = boto3.client('sqs')
+        config = Config(region_name = os.getenv('REGION'))
+        self._client = boto3.client('sqs', config=config)
 
     def send_message(self, message, destination):
         data = json.dumps(message)
