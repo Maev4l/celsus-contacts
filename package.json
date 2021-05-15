@@ -4,15 +4,15 @@
   "description": "",
   "main": "",
   "scripts": {
-    "deploy:dev": "yarn run download-infra:dev && npx sls deploy",
-    "download-infra:dev": "aws s3 cp s3://celsus-tf-state/celsus/dev/infra.json infra.json",
+    "deploy:dev": "yarn download-infra:dev && yarn run download-infra:dev && npx sls deploy",
+    "download-infra:dev": "aws s3 cp s3://global-tf-states/celsus/dev/infra.json infra.json",
     "reqs": "pipreqs . --ignore node_modules --force",
     "test": "pytest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless": "1.78.1",
-    "serverless-python-requirements": "5.1.0"
+    "serverless": "2.41.2",
+    "serverless-python-requirements": "5.1.1"
   }
 }
