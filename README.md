@@ -6,5 +6,5 @@
 # Requirements
 
 - python 3.x
-- pip install pytest pytest-env
+- pip install pytest pytest-env pytest-cov coveralls
 - pip install -r requirements.txt
